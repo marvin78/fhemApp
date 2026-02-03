@@ -144,13 +144,13 @@ BEGIN {
 # Constants and defaults
 #########################################################################
 	use constant {
-		FA_VERSION 					=> '1.2.2',			#Version of this Modul
+		FA_VERSION 					=> '1.2.3',			#Version of this Modul
 		FA_VERSION_FILENAME 		=> 'CHANGELOG.md',	#Default Version Filename
 		FA_INIT_INTERVAL			=> 60,				#Default Startup Interval
 		FA_DEFAULT_INTERVAL		=> 3600,			#Default Interval
-		FA_GITHUB_URL 				=> 'https://github.com/jemu75/fhemApp',
-		FA_GITHUB_API_BASEURL	=> 'https://api.github.com/repos/jemu75/fhemApp',
-		FA_GITHUB_API_OWNER     => 'jemu75',
+		FA_GITHUB_URL 				=> 'https://github.com/marvin78/fhemApp',
+		FA_GITHUB_API_BASEURL	=> 'https://api.github.com/repos/marvin78/fhemApp',
+		FA_GITHUB_API_OWNER     => 'marvin78',
 		FA_GITHUB_API_REPO	   => 'fhemApp',
 		FA_GITHUB_API_RELEASES  => 'releases',
 		FA_TAR_SUB_FOLDER			=> 'www/fhemapp4',
