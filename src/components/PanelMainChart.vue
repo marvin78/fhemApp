@@ -61,43 +61,52 @@
 
         // bereits gesetzte Werte bevorzugen
         if (chart.value.from && from) res = chart.value.from;
-        if (chart.value.to && !from) res = chart.value.to;
+        if (chart.value.to && !from)  res = chart.value.to;
 
-        const sval = typeof val === "string" ? val.trim() : val;
-
-        // relative tokens merken, aber NICHT als Date im State speichern
-        const rel = typeof sval === "string" ? parseRelativeToDate(sval) : null;
-        if (!res && rel) {
-            // Raw separat merken (für den späteren FHEM-get Command)
-            if (from) chart.value.fromRaw = sval;
-            else chart.value.toRaw = sval;
-
-            // Für UI/Interne Berechnungen trotzdem ein Date setzen
-            res = rel;
+        // 1) Date-Objekt direkt akzeptieren (z.B. vom DatePicker)
+        if (!res && val instanceof Date) {
+            res = val;
         }
 
-        // Tages-Offset (DBLog style): -1, 0, 1 ...
-        if (!res && !isNaN(sval)) {
+        const sval = (typeof val === "string") ? val.trim() : val;
+
+        // 2) relative Angaben: -6h, -30m, now, etc.
+        let isRelative = false;
+        if (!res && typeof sval === "string") {
+            const rel = parseRelativeToDate(sval);   // nutzt deine Funktion
+            if (rel) {
+                res = rel;
+                isRelative = true;
+            }
+        }
+
+        // 3) Tages-Offset (DBLog style): -1, 0, 1 ...
+        //    WICHTIG: nur wenn es wirklich eine Zahl/zahl-String ist
+        if (!res && (typeof sval === "number" || (typeof sval === "string" && sval !== "" && !isNaN(sval)))) {
             res = (d => new Date(d.setDate(d.getDate() + (Number(sval) || 0))))(new Date());
         }
 
-        // absolute Datumseingabe
+        // 4) absolute Datumseingabe
         if (!res) {
-            res = new Date(/.*T.*/.test(sval) ? sval : sval + "T00:00:00");
+            // Wenn kein "T" drin ist, interpretiere als Tag (00:00:00 lokal)
+            res = new Date(/.*T.*/.test(String(sval)) ? sval : String(sval) + "T00:00:00");
         }
 
-        // State updaten (immer Date-Objekte!)
+        // State updaten (immer Date-Objekte)
         if (!chart.value.from && from) chart.value.from = res;
-        if (!chart.value.to && !from) chart.value.to = res;
+        if (!chart.value.to && !from)  chart.value.to = res;
 
-        // normalisieren wie vorher
-        res = new Date(res.getTime() - (res.getTimezoneOffset() * 60 * 1000));
+        // "lokale Zeit als ISO" trick: Offset abziehen, dann toISOString()
+        const localIso = new Date(res.getTime() - (res.getTimezoneOffset() * 60 * 1000))
+            .toISOString()
+            .replace("T", "_")
+            .replace("Z", "");
 
-        // Rückgabe bleibt kompatibel (YYYY-MM-DD)
-        return res.toISOString().split("T")[0];
+        // Rückgabe:
+        // - relative Angaben => mit Uhrzeit
+        // - sonst wie bisher nur Datum (wenn du das so willst)
+        return isRelative ? localIso.slice(0, 19) : localIso.slice(0, 10);
     }
-
-
 
 
 
