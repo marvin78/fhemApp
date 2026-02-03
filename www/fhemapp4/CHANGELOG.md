@@ -1,3 +1,6 @@
+# v4.8.5 (03.02.2026)
+## Charts
+- better relative Dates with hours allowed when using InfluxDBLogger
 # v4.8.4 (03.02.2026)
 ## Charts
 - better relative Dates with hours allowed when using InfluxDBLogger

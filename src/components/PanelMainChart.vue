@@ -78,83 +78,35 @@
     function getDate(val, from) {
         let res;
 
-        // falls chart.value.from/to schon gesetzt ist, beibehalten
         if (chart.value.from && from) res = chart.value.from;
         if (chart.value.to && !from) res = chart.value.to;
 
-        const now = new Date();
+        const isRelative = (v) =>
+            typeof v === "string" && (v === "now" || /^-?\d+(s|m|h|d|w)$/.test(v));
 
-        // helpers
-        const isIso = (s) => typeof s === "string" && /T/.test(s);
-        const isYmd = (s) => typeof s === "string" && /^\d{4}-\d{2}-\d{2}$/.test(s);
-        const isRel = (s) => typeof s === "string" && /^-?\d+(s|m|h|d|w)$/.test(s);
+        // 👇 WICHTIG: relative Angaben NICHT umrechnen – direkt an FHEM geben
+        if (!res && isRelative(val)) {
+            if (!chart.value.from && from) chart.value.from = val;
+            if (!chart.value.to && !from) chart.value.to = val;
+            return val; // z.B. "-6h" oder "now"
+        }
 
-        const toLocalIso = (d) => {
-            // “local ISO” (ohne UTC-Shift im Chart)
-            const x = new Date(d.getTime() - d.getTimezoneOffset() * 60000);
-            return x.toISOString().replace(".000Z", "Z");
-        };
-
-        // 1) Wenn res noch nicht gesetzt ist: val interpretieren
+        // Originalverhalten für absolute Werte / Tages-Offsets
+        if (!res && !isNaN(val)) {
+            res = (d => new Date(d.setDate(d.getDate() + (Number(val) || 0))))(new Date());
+        }
         if (!res) {
-            // a) numerisch (Tage) – wie vorher
-            if (val !== null && val !== "" && !isNaN(val)) {
-            const days = Number(val) || 0;
-            const d = new Date();
-            d.setDate(d.getDate() + days);
-            res = d;
-            }
-            // b) "now"
-            else if (val === "now") {
-            res = now;
-            }
-            // c) relative Angaben wie -6h, -30m, -7d, -2w
-            else if (isRel(val)) {
-            const m = String(val).match(/^(-?\d+)([smhdw])$/);
-            const n = Number(m[1]);
-            const u = m[2];
-
-            let ms = n * 1000;              // s
-            if (u === "m") ms = n * 60 * 1000;
-            if (u === "h") ms = n * 60 * 60 * 1000;
-            if (u === "d") ms = n * 24 * 60 * 60 * 1000;
-            if (u === "w") ms = n * 7 * 24 * 60 * 60 * 1000;
-
-            res = new Date(now.getTime() + ms);
-            }
-            // d) ISO oder YYYY-MM-DD
-            else if (isIso(val)) {
-            res = new Date(val);
-            }
-            else if (isYmd(val)) {
-            res = new Date(val + "T00:00:00");
-            }
-            // e) fallback: versuchen zu parsen
-            else {
-            res = new Date(val);
-            }
+            // YYYY-MM-DD oder ISO -> Date
+            res = new Date(/.*T.*/.test(val) ? val : val + "T00:00:00");
         }
 
-        // 2) Validieren (sonst knallt toISOString)
-        if (!(res instanceof Date) || isNaN(res.getTime())) {
-            console.error("getDate: invalid date from val=", val, "res=", res);
-            // sinnvolles fallback statt Crash:
-            res = now;
-        }
-
-        // 3) chart.value.from/to setzen (wie vorher)
         if (!chart.value.from && from) chart.value.from = res;
         if (!chart.value.to && !from) chart.value.to = res;
 
-        // 4) Rückgabeformat:
-        // - Für relative Zeiten mit Stunden/Minuten/Sekunden und für "now" -> volle ISO mit Zeit
-        // - Für Tage/Wochen oder absolute YYYY-MM-DD -> nur Datum (wie vorher)
-        const wantsTime =
-            val === "now" ||
-            (isRel(val) && !/[dw]$/.test(val)) ||   // s/m/h => time; d/w => date-only
-            isIso(val);
+        // wie vorher: auf lokales Datum normalisieren
+        res = new Date(res.getTime() - (res.getTimezoneOffset() * 60 * 1000));
 
-        return wantsTime ? toLocalIso(res) : toLocalIso(res).split("T")[0];
+        return res.toISOString().split("T")[0];
     }
 
 
