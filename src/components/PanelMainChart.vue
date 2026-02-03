@@ -76,35 +76,87 @@
     }
 
     function getDate(val, from) {
-        let res
+        let res;
 
-        if (chart.value.from && from) res = chart.value.from
-        if (chart.value.to && !from) res = chart.value.to
+        // falls chart.value.from/to schon gesetzt ist, beibehalten
+        if (chart.value.from && from) res = chart.value.from;
+        if (chart.value.to && !from) res = chart.value.to;
 
-        const isRelative = typeof val === "string" && /^-?\d+(s|m|h|d|w)$/.test(val)
-        const isNow = val === "now"
-        const wantsTime = isRelative && !/d|w$/.test(val) || isNow
+        const now = new Date();
 
-        if (!res && !isNaN(val)) {
-            res = (d => new Date(d.setDate(d.getDate() + (Number(val) || 0))))(new Date)
-        }
+        // helpers
+        const isIso = (s) => typeof s === "string" && /T/.test(s);
+        const isYmd = (s) => typeof s === "string" && /^\d{4}-\d{2}-\d{2}$/.test(s);
+        const isRel = (s) => typeof s === "string" && /^-?\d+(s|m|h|d|w)$/.test(s);
 
+        const toLocalIso = (d) => {
+            // “local ISO” (ohne UTC-Shift im Chart)
+            const x = new Date(d.getTime() - d.getTimezoneOffset() * 60000);
+            return x.toISOString().replace(".000Z", "Z");
+        };
+
+        // 1) Wenn res noch nicht gesetzt ist: val interpretieren
         if (!res) {
-            // akzeptiere auch bereits ISO-Strings (mit T) oder Datum-only
-            res = new Date(/.*T.*/.test(val) ? val : val + 'T00:00:00')
+            // a) numerisch (Tage) – wie vorher
+            if (val !== null && val !== "" && !isNaN(val)) {
+            const days = Number(val) || 0;
+            const d = new Date();
+            d.setDate(d.getDate() + days);
+            res = d;
+            }
+            // b) "now"
+            else if (val === "now") {
+            res = now;
+            }
+            // c) relative Angaben wie -6h, -30m, -7d, -2w
+            else if (isRel(val)) {
+            const m = String(val).match(/^(-?\d+)([smhdw])$/);
+            const n = Number(m[1]);
+            const u = m[2];
+
+            let ms = n * 1000;              // s
+            if (u === "m") ms = n * 60 * 1000;
+            if (u === "h") ms = n * 60 * 60 * 1000;
+            if (u === "d") ms = n * 24 * 60 * 60 * 1000;
+            if (u === "w") ms = n * 7 * 24 * 60 * 60 * 1000;
+
+            res = new Date(now.getTime() + ms);
+            }
+            // d) ISO oder YYYY-MM-DD
+            else if (isIso(val)) {
+            res = new Date(val);
+            }
+            else if (isYmd(val)) {
+            res = new Date(val + "T00:00:00");
+            }
+            // e) fallback: versuchen zu parsen
+            else {
+            res = new Date(val);
+            }
         }
 
-        if (!chart.value.from && from) chart.value.from = res
-        if (!chart.value.to && !from) chart.value.to = res
+        // 2) Validieren (sonst knallt toISOString)
+        if (!(res instanceof Date) || isNaN(res.getTime())) {
+            console.error("getDate: invalid date from val=", val, "res=", res);
+            // sinnvolles fallback statt Crash:
+            res = now;
+        }
 
-        // “local ISO” trick wie gehabt
-        res = new Date(res.getTime() - (res.getTimezoneOffset() * 60 * 1000))
+        // 3) chart.value.from/to setzen (wie vorher)
+        if (!chart.value.from && from) chart.value.from = res;
+        if (!chart.value.to && !from) chart.value.to = res;
 
-        // WICHTIG: Wenn Stunden/Minuten im Spiel sind: volle Zeit zurückgeben!
-        return wantsTime
-            ? res.toISOString().replace('.000Z', 'Z')   // z.B. 2026-02-03T11:03:00Z
-            : res.toISOString().split('T')[0]          // z.B. 2026-02-03
+        // 4) Rückgabeformat:
+        // - Für relative Zeiten mit Stunden/Minuten/Sekunden und für "now" -> volle ISO mit Zeit
+        // - Für Tage/Wochen oder absolute YYYY-MM-DD -> nur Datum (wie vorher)
+        const wantsTime =
+            val === "now" ||
+            (isRel(val) && !/[dw]$/.test(val)) ||   // s/m/h => time; d/w => date-only
+            isIso(val);
+
+        return wantsTime ? toLocalIso(res) : toLocalIso(res).split("T")[0];
     }
+
 
 
 
