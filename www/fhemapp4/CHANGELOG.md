@@ -1,6 +1,3 @@
-# v4.8.2 (03.02.2026)
-## Charts
-- realtive Dates for InfluxDBLogger allowed
 # v4.8.1 (12.01.2025)
 ## Button
 - Bugfix for popout command

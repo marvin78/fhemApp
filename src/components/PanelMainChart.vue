@@ -76,39 +76,36 @@
     }
 
     function getDate(val, from) {
-        let res;
+        let res
 
-        if (chart.value.from && from) res = chart.value.from;
-        if (chart.value.to && !from) res = chart.value.to;
+        if (chart.value.from && from) res = chart.value.from
+        if (chart.value.to && !from) res = chart.value.to
 
-        // 1) Relative Zeiten (now, -12h, -7d, ...)
-        if (!res) {
-            const rel = parseRelative(val);
-            if (rel) res = rel;
-        }
+        const isRelative = typeof val === "string" && /^-?\d+(s|m|h|d|w)$/.test(val)
+        const isNow = val === "now"
+        const wantsTime = isRelative && !/d|w$/.test(val) || isNow
 
-        // 2) Numerisch (Tage) wie bisher: -1, 1, 0 ...
         if (!res && !isNaN(val)) {
-            res = (d => new Date(d.setDate(d.getDate() + (Number(val) || 0))))(new Date());
+            res = (d => new Date(d.setDate(d.getDate() + (Number(val) || 0))))(new Date)
         }
 
-        // 3) Absolute Daten wie bisher
         if (!res) {
-            const v = normalizeDateString(val);
-            res = new Date(/.*T.*/.test(v) ? v : (v + "T00:00:00"));
+            // akzeptiere auch bereits ISO-Strings (mit T) oder Datum-only
+            res = new Date(/.*T.*/.test(val) ? val : val + 'T00:00:00')
         }
 
-        if (!chart.value.from && from) chart.value.from = res;
-        if (!chart.value.to && !from) chart.value.to = res;
+        if (!chart.value.from && from) chart.value.from = res
+        if (!chart.value.to && !from) chart.value.to = res
 
-        // Schutz: falls doch Invalid Date entsteht, nicht toISOString() aufrufen
-        if (!(res instanceof Date) || isNaN(res.getTime())) {
-            throw new Error("Invalid time value in getDate(): " + val);
-        }
+        // “local ISO” trick wie gehabt
+        res = new Date(res.getTime() - (res.getTimezoneOffset() * 60 * 1000))
 
-        res = new Date(res.getTime() - (res.getTimezoneOffset() * 60 * 1000));
-        return res.toISOString().split("T")[0];
+        // WICHTIG: Wenn Stunden/Minuten im Spiel sind: volle Zeit zurückgeben!
+        return wantsTime
+            ? res.toISOString().replace('.000Z', 'Z')   // z.B. 2026-02-03T11:03:00Z
+            : res.toISOString().split('T')[0]          // z.B. 2026-02-03
     }
+
 
 
     async function loadData() {
