@@ -39,22 +39,77 @@
         return i18n.d(val, { dateStyle: mobile.value ? 'short' : 'long' })
     }
 
-    function getDate(val, from) {
-        let res
+    function parseRelative(val) {
+        if (typeof val !== "string") return null;
 
-        if(chart.value.from && from) res = chart.value.from
-        if(chart.value.to && !from) res = chart.value.to
+        const v = val.trim().toLowerCase();
 
-        if(!res && !isNaN(val)) res = (d => new Date(d.setDate(d.getDate() + (Number(val) || 0))))(new Date) 
-        if(!res) res = new Date(/.*T.*/.test(val) ? val : val + 'T00:00:00')
+        if (v === "now") return new Date();
 
-        if(!chart.value.from && from) chart.value.from = res
-        if(!chart.value.to && !from) chart.value.to = res
+        // z.B. -12h, -30m, -7d, -2w, -10s, +3h ...
+        const m = v.match(/^([+-]?\d+)\s*([smhdw])$/);
+        if (!m) return null;
 
-        res = new Date(res.getTime() - (res.getTimezoneOffset() * 60 * 1000))
+        const n = Number(m[1]);
+        const unit = m[2];
 
-        return res.toISOString().split('T')[0]        
+        const mult = {
+            s: 1000,
+            m: 60 * 1000,
+            h: 60 * 60 * 1000,
+            d: 24 * 60 * 60 * 1000,
+            w: 7 * 24 * 60 * 60 * 1000
+        }[unit];
+
+        return new Date(Date.now() + n * mult);
     }
+
+    function normalizeDateString(val) {
+        if (typeof val !== "string") return val;
+
+        // DBLog Ausgabe: 2026-01-29_00:02:34 -> ISO-like
+        const v = val.trim();
+        if (/^\d{4}-\d{2}-\d{2}_\d{2}:\d{2}:\d{2}$/.test(v)) {
+            return v.replace("_", "T");
+        }
+        return v;
+    }
+
+    function getDate(val, from) {
+        let res;
+
+        if (chart.value.from && from) res = chart.value.from;
+        if (chart.value.to && !from) res = chart.value.to;
+
+        // 1) Relative Zeiten (now, -12h, -7d, ...)
+        if (!res) {
+            const rel = parseRelative(val);
+            if (rel) res = rel;
+        }
+
+        // 2) Numerisch (Tage) wie bisher: -1, 1, 0 ...
+        if (!res && !isNaN(val)) {
+            res = (d => new Date(d.setDate(d.getDate() + (Number(val) || 0))))(new Date());
+        }
+
+        // 3) Absolute Daten wie bisher
+        if (!res) {
+            const v = normalizeDateString(val);
+            res = new Date(/.*T.*/.test(v) ? v : (v + "T00:00:00"));
+        }
+
+        if (!chart.value.from && from) chart.value.from = res;
+        if (!chart.value.to && !from) chart.value.to = res;
+
+        // Schutz: falls doch Invalid Date entsteht, nicht toISOString() aufrufen
+        if (!(res instanceof Date) || isNaN(res.getTime())) {
+            throw new Error("Invalid time value in getDate(): " + val);
+        }
+
+        res = new Date(res.getTime() - (res.getTimezoneOffset() * 60 * 1000));
+        return res.toISOString().split("T")[0];
+    }
+
 
     async function loadData() {
         let defs = fhem.handleDefs(props.el.serie, ['data', 'name', 'digits', 'suffix', 'type'], [null, '', 0, '', 'line'], true),
