@@ -39,75 +39,64 @@
         return i18n.d(val, { dateStyle: mobile.value ? 'short' : 'long' })
     }
 
-    function parseRelative(val) {
-        if (typeof val !== "string") return null;
-
-        const v = val.trim().toLowerCase();
-
+    function parseRelativeToDate(v) {
         if (v === "now") return new Date();
 
-        // z.B. -12h, -30m, -7d, -2w, -10s, +3h ...
-        const m = v.match(/^([+-]?\d+)\s*([smhdw])$/);
+        const m = /^(-?\d+)(s|m|h|d|w)$/.exec(v);
         if (!m) return null;
 
         const n = Number(m[1]);
         const unit = m[2];
+        let ms = n * 1000;
+        if (unit === "m") ms = n * 60 * 1000;
+        if (unit === "h") ms = n * 60 * 60 * 1000;
+        if (unit === "d") ms = n * 24 * 60 * 60 * 1000;
+        if (unit === "w") ms = n * 7 * 24 * 60 * 60 * 1000;
 
-        const mult = {
-            s: 1000,
-            m: 60 * 1000,
-            h: 60 * 60 * 1000,
-            d: 24 * 60 * 60 * 1000,
-            w: 7 * 24 * 60 * 60 * 1000
-        }[unit];
-
-        return new Date(Date.now() + n * mult);
-    }
-
-    function normalizeDateString(val) {
-        if (typeof val !== "string") return val;
-
-        // DBLog Ausgabe: 2026-01-29_00:02:34 -> ISO-like
-        const v = val.trim();
-        if (/^\d{4}-\d{2}-\d{2}_\d{2}:\d{2}:\d{2}$/.test(v)) {
-            return v.replace("_", "T");
-        }
-        return v;
+        return new Date(Date.now() + ms);
     }
 
     function getDate(val, from) {
         let res;
 
+        // bereits gesetzte Werte bevorzugen
         if (chart.value.from && from) res = chart.value.from;
         if (chart.value.to && !from) res = chart.value.to;
 
-        const isRelative = (v) =>
-            typeof v === "string" && (v === "now" || /^-?\d+(s|m|h|d|w)$/.test(v));
+        const sval = typeof val === "string" ? val.trim() : val;
 
-        // 👇 WICHTIG: relative Angaben NICHT umrechnen – direkt an FHEM geben
-        if (!res && isRelative(val)) {
-            if (!chart.value.from && from) chart.value.from = val;
-            if (!chart.value.to && !from) chart.value.to = val;
-            return val; // z.B. "-6h" oder "now"
+        // relative tokens merken, aber NICHT als Date im State speichern
+        const rel = typeof sval === "string" ? parseRelativeToDate(sval) : null;
+        if (!res && rel) {
+            // Raw separat merken (für den späteren FHEM-get Command)
+            if (from) chart.value.fromRaw = sval;
+            else chart.value.toRaw = sval;
+
+            // Für UI/Interne Berechnungen trotzdem ein Date setzen
+            res = rel;
         }
 
-        // Originalverhalten für absolute Werte / Tages-Offsets
-        if (!res && !isNaN(val)) {
-            res = (d => new Date(d.setDate(d.getDate() + (Number(val) || 0))))(new Date());
+        // Tages-Offset (DBLog style): -1, 0, 1 ...
+        if (!res && !isNaN(sval)) {
+            res = (d => new Date(d.setDate(d.getDate() + (Number(sval) || 0))))(new Date());
         }
+
+        // absolute Datumseingabe
         if (!res) {
-            // YYYY-MM-DD oder ISO -> Date
-            res = new Date(/.*T.*/.test(val) ? val : val + "T00:00:00");
+            res = new Date(/.*T.*/.test(sval) ? sval : sval + "T00:00:00");
         }
 
+        // State updaten (immer Date-Objekte!)
         if (!chart.value.from && from) chart.value.from = res;
         if (!chart.value.to && !from) chart.value.to = res;
 
-        // wie vorher: auf lokales Datum normalisieren
+        // normalisieren wie vorher
         res = new Date(res.getTime() - (res.getTimezoneOffset() * 60 * 1000));
 
+        // Rückgabe bleibt kompatibel (YYYY-MM-DD)
         return res.toISOString().split("T")[0];
     }
+
 
 
 
