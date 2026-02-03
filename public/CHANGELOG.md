@@ -1,3 +1,6 @@
+# v4.8.10 (03.02.2026)
+## Charts
+- fix for timeshift
 # v4.8.9 (03.02.2026)
 ## Core
 - add seconds to time

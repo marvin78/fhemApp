@@ -56,66 +56,60 @@
         return new Date(Date.now() + ms);
     }
 
-    function formatLocalDateTime(d) {
-            const x = new Date(d.getTime() - d.getTimezoneOffset() * 60000)
-                .toISOString()
-                .replace("T", "_")
-                .replace("Z", "");
-            return x.slice(0, 19); // YYYY-MM-DD_HH:MM:SS
+    function pad(n){ return String(n).padStart(2,'0'); }
+
+    function formatLocalDate(d){
+        return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+    }
+
+    function formatLocalDateTime(d){
+        return `${formatLocalDate(d)}_${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+    }
+
+    function getDate(val, from) {
+        const sval = (typeof val === "string") ? val.trim() : val;
+
+        // 1) Relative Angaben IMMER direkt auflösen (Vorrang!)
+        if (typeof sval === "string") {
+            const rel = parseRelativeToDate(sval); // deine Funktion (-6h, now, ...)
+            if (rel) {
+                // KEIN chart.value.from/to verwenden oder setzen -> sonst wird’s "statisch" und oft 00:00
+                return formatLocalDateTime(rel);
+            }
         }
 
-        function formatLocalDate(d) {
-            const x = new Date(d.getTime() - d.getTimezoneOffset() * 60000)
-                .toISOString()
-                .replace("T", "_")
-                .replace("Z", "");
-            return x.slice(0, 10); // YYYY-MM-DD
-        }
+        // 2) Wenn User im UI bereits from/to gewählt hat, dann diese Werte nutzen
+        if (chart.value.from && from) return formatLocalDate(chart.value.from);
+        if (chart.value.to && !from)  return formatLocalDate(chart.value.to);
 
-        function getDate(val, from) {
-            const sval = (typeof val === "string") ? val.trim() : val;
-
-            // 1) Relative Angaben IMMER direkt auflösen (Vorrang!)
-            if (typeof sval === "string") {
-                const rel = parseRelativeToDate(sval); // deine Funktion (-6h, now, ...)
-                if (rel) {
-                    // KEIN chart.value.from/to verwenden oder setzen -> sonst wird’s "statisch" und oft 00:00
-                    return formatLocalDateTime(rel);
-                }
-            }
-
-            // 2) Wenn User im UI bereits from/to gewählt hat, dann diese Werte nutzen
-            if (chart.value.from && from) return formatLocalDate(chart.value.from);
-            if (chart.value.to && !from)  return formatLocalDate(chart.value.to);
-
-            // 3) Date-Objekt (DatePicker)
-            if (sval instanceof Date) {
-                // DatePicker ist i.d.R. 00:00:00 -> bewusst nur Datum zurückgeben
-                const res = sval;
-                if (!chart.value.from && from) chart.value.from = res;
-                if (!chart.value.to && !from)  chart.value.to = res;
-                return formatLocalDate(res);
-            }
-
-            // 4) Tages-Offsets (-1, 0, 1 ...) -> DBLog-Style
-            if (typeof sval === "number" || (typeof sval === "string" && sval !== "" && !isNaN(sval))) {
-                const d = new Date();
-                d.setDate(d.getDate() + (Number(sval) || 0));
-                // Offset bedeutet Tag -> Datum ohne Uhrzeit
-                if (!chart.value.from && from) chart.value.from = d;
-                if (!chart.value.to && !from)  chart.value.to = d;
-                return formatLocalDate(d);
-            }
-
-            // 5) Absolute Strings: wenn keine Uhrzeit drin ist -> 00:00:00
-            const s = String(sval);
-            const res = new Date(/.*T.*/.test(s) ? s : s + "T00:00:00");
-
+        // 3) Date-Objekt (DatePicker)
+        if (sval instanceof Date) {
+            // DatePicker ist i.d.R. 00:00:00 -> bewusst nur Datum zurückgeben
+            const res = sval;
             if (!chart.value.from && from) chart.value.from = res;
             if (!chart.value.to && !from)  chart.value.to = res;
-
             return formatLocalDate(res);
         }
+
+        // 4) Tages-Offsets (-1, 0, 1 ...) -> DBLog-Style
+        if (typeof sval === "number" || (typeof sval === "string" && sval !== "" && !isNaN(sval))) {
+            const d = new Date();
+            d.setDate(d.getDate() + (Number(sval) || 0));
+            // Offset bedeutet Tag -> Datum ohne Uhrzeit
+            if (!chart.value.from && from) chart.value.from = d;
+            if (!chart.value.to && !from)  chart.value.to = d;
+            return formatLocalDate(d);
+        }
+
+        // 5) Absolute Strings: wenn keine Uhrzeit drin ist -> 00:00:00
+        const s = String(sval);
+        const res = new Date(/.*T.*/.test(s) ? s : s + "T00:00:00");
+
+        if (!chart.value.from && from) chart.value.from = res;
+        if (!chart.value.to && !from)  chart.value.to = res;
+
+        return formatLocalDate(res);
+    }
 
 
 
