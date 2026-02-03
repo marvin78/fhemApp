@@ -30,7 +30,7 @@ export const useFhemStore = defineStore('fhem', () => {
         },
         header: {            
             time: new Date(),
-            timeFormat: { hour: '2-digit', minute: '2-digit' },
+            timeFormat: { hour: '2-digit', minute: '2-digit', second: '2-digit' },
             dateFormat: { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' },
             showTime: false,
             showDate: false,

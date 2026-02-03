@@ -1,3 +1,6 @@
+# v4.8.9 (03.02.2026)
+## Core
+- add seconds to time
 # v4.8.8 (03.02.2026)
 ## Charts
 - better relative Dates with hours allowed when using InfluxDBLogger
