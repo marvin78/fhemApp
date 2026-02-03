@@ -34,7 +34,6 @@
 
         return 'height: ' + (/=maximized$/.test(fhem.app.currentView) ? (window.innerHeight - 250) + 'px' : props.height)
     })
-    
 
     function toLocaleDate(val) {
         return i18n.d(val, { dateStyle: mobile.value ? 'short' : 'long' })
@@ -57,7 +56,7 @@
         return new Date(Date.now() + ms);
     }
     
-
+    
     function pad(n){ return String(n).padStart(2,'0'); }
 
     function formatLocalDate(d){
