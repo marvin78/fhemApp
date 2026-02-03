@@ -66,7 +66,6 @@
         return `${formatLocalDate(d)}_${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
     }
 
-    
     function getDate(val, from) {
         const sval = (typeof val === "string") ? val.trim() : val;
 
