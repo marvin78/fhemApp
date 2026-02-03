@@ -1,3 +1,21 @@
+# v4.8.8 (03.02.2026)
+## Charts
+- better relative Dates with hours allowed when using InfluxDBLogger
+# v4.8.7 (03.02.2026)
+## Charts
+- better relative Dates with hours allowed when using InfluxDBLogger
+# v4.8.5 (03.02.2026)
+## Charts
+- better relative Dates with hours allowed when using InfluxDBLogger
+# v4.8.4 (03.02.2026)
+## Charts
+- better relative Dates with hours allowed when using InfluxDBLogger
+# v4.8.3 (03.02.2026)
+## Charts
+- better relative Dates with hours allowed when using InfluxDBLogger
+# v4.8.2 (03.02.2026)
+## Charts
+- relative Dates for InfluxDBLogger allowed
 # v4.8.1 (12.01.2025)
 ## Button
 - Bugfix for popout command
