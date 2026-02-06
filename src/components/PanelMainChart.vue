@@ -105,7 +105,8 @@
 
         // 5) Absolute Strings: wenn keine Uhrzeit drin ist -> 00:00:00
         const s = String(sval);
-        res = new Date(/.*T.*/.test(s) ? s : s + "T00:00:00");
+        if (/.*T.*/.test(s))
+            res = new Date(s + "T00:00:00");
 
         if (!chart.value.from && from) chart.value.from = res;
         if (!chart.value.to && !from)  chart.value.to = res;
