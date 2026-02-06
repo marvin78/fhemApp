@@ -1,3 +1,6 @@
+# v4.8.11 (05.02.2026)
+## Charts
+- better from/to handling
 # v4.8.10 (03.02.2026)
 ## Charts
 - fix for timeshift

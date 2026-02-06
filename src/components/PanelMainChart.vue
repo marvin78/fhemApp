@@ -68,28 +68,29 @@
     }
 
     function getDate(val, from) {
+        let res;
         const sval = (typeof val === "string") ? val.trim() : val;
 
-        // 1) Relative Angaben IMMER direkt auflösen (Vorrang!)
+        // 1) Wenn User im UI bereits from/to gewählt hat, dann diese Werte nutzen
+        if (chart.value.from && from) res = formatLocalDate(chart.value.from);
+        if (chart.value.to && !from)  res = formatLocalDate(chart.value.to);
+
+        // 2) Relative Angaben IMMER direkt auflösen (Vorrang!)
         if (typeof sval === "string") {
             const rel = parseRelativeToDate(sval); // deine Funktion (-6h, now, ...)
             if (rel) {
                 // KEIN chart.value.from/to verwenden oder setzen -> sonst wird’s "statisch" und oft 00:00
-                return formatLocalDateTime(rel);
+                res = formatLocalDateTime(rel);
             }
         }
-
-        // 2) Wenn User im UI bereits from/to gewählt hat, dann diese Werte nutzen
-        if (chart.value.from && from) return formatLocalDate(chart.value.from);
-        if (chart.value.to && !from)  return formatLocalDate(chart.value.to);
 
         // 3) Date-Objekt (DatePicker)
         if (sval instanceof Date) {
             // DatePicker ist i.d.R. 00:00:00 -> bewusst nur Datum zurückgeben
-            const res = sval;
+            res = sval;
             if (!chart.value.from && from) chart.value.from = res;
             if (!chart.value.to && !from)  chart.value.to = res;
-            return formatLocalDate(res);
+            // return formatLocalDate(res);
         }
 
         // 4) Tages-Offsets (-1, 0, 1 ...) -> DBLog-Style
@@ -99,17 +100,17 @@
             // Offset bedeutet Tag -> Datum ohne Uhrzeit
             if (!chart.value.from && from) chart.value.from = d;
             if (!chart.value.to && !from)  chart.value.to = d;
-            return formatLocalDate(d);
+            res = formatLocalDate(d);
         }
 
         // 5) Absolute Strings: wenn keine Uhrzeit drin ist -> 00:00:00
         const s = String(sval);
-        const res = new Date(/.*T.*/.test(s) ? s : s + "T00:00:00");
+        res = new Date(/.*T.*/.test(s) ? s : s + "T00:00:00");
 
         if (!chart.value.from && from) chart.value.from = res;
         if (!chart.value.to && !from)  chart.value.to = res;
 
-        return formatLocalDate(res);
+        return res;
     }
 
 
@@ -148,6 +149,7 @@
                             
                             if(cols.length > 1) {
                                 ts = new Date(cols[0].replace('_','T'))
+                                if (cmd[3] == 1) ts.setHours(ts.getHours() - 1);
                                 val = parseFloat(cols[1]).toFixed(def.digits)
 
                                 data.push([ts, val])
