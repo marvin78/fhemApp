@@ -76,7 +76,7 @@
         if (chart.value.to && !from)  res = formatLocalDate(chart.value.to);
 
         // 2) Relative Angaben IMMER direkt auflösen (Vorrang!)
-        if (typeof sval === "string") {
+        if (!res && typeof sval === "string") {
             const rel = parseRelativeToDate(sval); // deine Funktion (-6h, now, ...)
             if (rel) {
                 // KEIN chart.value.from/to verwenden oder setzen -> sonst wird’s "statisch" und oft 00:00
@@ -85,7 +85,7 @@
         }
 
         // 3) Date-Objekt (DatePicker)
-        if (sval instanceof Date) {
+        if (!res && sval instanceof Date) {
             // DatePicker ist i.d.R. 00:00:00 -> bewusst nur Datum zurückgeben
             res = sval;
             if (!chart.value.from && from) chart.value.from = res;
@@ -94,7 +94,7 @@
         }
 
         // 4) Tages-Offsets (-1, 0, 1 ...) -> DBLog-Style
-        if (typeof sval === "number" || (typeof sval === "string" && sval !== "" && !isNaN(sval))) {
+        if (!res && typeof sval === "number" || (typeof sval === "string" && sval !== "" && !isNaN(sval))) {
             const d = new Date();
             d.setDate(d.getDate() + (Number(sval) || 0));
             // Offset bedeutet Tag -> Datum ohne Uhrzeit

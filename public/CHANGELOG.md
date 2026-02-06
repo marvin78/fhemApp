@@ -1,3 +1,6 @@
+# v4.8.15 (05.02.2026)
+## Charts
+- try to fix invalid date.hours
 # v4.8.14 (05.02.2026)
 ## Charts
 - delete debug console log
