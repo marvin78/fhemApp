@@ -113,6 +113,8 @@
         if (/.*T.*/.test(s))
             res = new Date(s + "T00:00:00");
 
+        console.log("res-gres: " + res + "-" + gres);
+
         if (!chart.value.from && from) chart.value.from = gres;
         if (!chart.value.to && !from)  chart.value.to = gres;
 

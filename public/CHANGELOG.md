@@ -1,3 +1,6 @@
+# v4.8.23 (06.02.2026)
+## Charts
+- another try to fix invalid date
 # v4.8.22 (06.02.2026)
 ## Charts
 - another try to fix invalid date
