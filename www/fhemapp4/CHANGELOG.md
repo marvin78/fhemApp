@@ -1,3 +1,6 @@
+# v4.8.32 (06.02.2026)
+## Charts
+- fix for DBLog relative date
 # v4.8.31 (06.02.2026)
 ## Charts
 - fix for revert some of the AI suggested changes

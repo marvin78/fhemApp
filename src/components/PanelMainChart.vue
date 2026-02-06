@@ -85,7 +85,12 @@
         }
 
         // 4) Tages-Offsets (-1, 0, 1 ...) -> DBLog-Style
-        if(!res && !isNaN(val)) res = (d => new Date(d.setDate(d.getDate() + (Number(val) || 0))))(new Date) 
+        //if(!res && !isNaN(val)) res = (d => new Date(d.setDate(d.getDate() + (Number(val) || 0))))(new Date) 
+        if (!res && !isNaN(val)) {
+            const d = new Date();
+            d.setDate(d.getDate() + (Number(val) || 0));
+            res = d;
+        }
 
         // 5) Absolute Strings: wenn keine Uhrzeit drin ist -> 00:00:00
         if(!res) res = new Date(/.*T.*/.test(val) ? val : val + 'T00:00:00')
