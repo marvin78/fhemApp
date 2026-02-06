@@ -13,13 +13,9 @@
 
     const height = ref(/=maximized$/.test(fhem.app.currentView) ? (window.innerHeight - 170) : props.height)
 
-    const content = computed(() => {
-        let src = fhem.handleDefs(props.el.html, ['text'],['', true]),
-            res = {
-                text: src.text
-            }
+    const html = computed(() => {
+        return fhem.handleDefs(props.el.html, ['text'],['', true])
 
-        return res
     })
 </script>
 
@@ -27,6 +23,6 @@
     <html 
         :height="height"
         style="border:none; width:100%;">
-        <span v-html="content.text"></span>     
+        <span v-html="html.text"></span>     
     </html>
 </template>

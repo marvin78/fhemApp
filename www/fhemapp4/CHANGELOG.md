@@ -1,3 +1,6 @@
+# v4.9.4S (06.02.2026)
+## Core
+- try to get html panel to work
 # v4.9.3S (06.02.2026)
 ## Core
 - better raw html panel
