@@ -27,6 +27,6 @@
     <html 
         :height="height"
         style="border:none; width:100%;">
-        {{ content.text }}     
+        <span v-html="content.text"></span>     
     </html>
 </template>

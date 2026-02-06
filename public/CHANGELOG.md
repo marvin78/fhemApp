@@ -1,3 +1,6 @@
+# v4.9.3S (06.02.2026)
+## Core
+- better raw html panel
 # v4.9.2S (06.02.2026)
 ## Core
 - try to add html as panel
