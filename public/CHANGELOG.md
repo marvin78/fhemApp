@@ -1,3 +1,6 @@
+# v4.9.0 - S (06.02.2026)
+## Core
+- bugfix: nozero for diff
 # v4.8.35 (06.02.2026)
 ## Charts
 - add relative midnight

@@ -861,10 +861,10 @@ export const useFhemStore = defineStore('fhem', () => {
         let diffMinutes = options.minutes ? Math.floor(diffMs / (1000 * 60)) - (diffDays * 24 * 60) - (diffHours * 60) : 0
         let diffSeconds = options.seconds ? Math.floor(diffMs / 1000) - (diffDays * 24 * 60 * 60) - (diffHours * 60 * 60) - (diffMinutes * 60): 0 
 
-        let showDay = /nozero/.test(options.days) ? false : true
-        let showHour = /nozero/.test(options.hours) ? false : true
-        let showMinute = /nozero/.test(options.minutes) ? false : true
-        let showSecond = /nozero/.test(options.seconds) ? false : true
+        let showDay = /nozero/.test(options.days) && diffDays < 1 ? false : true
+        let showHour = /nozero/.test(options.hours) && diffHours < 1  ? false : true
+        let showMinute = /nozero/.test(options.minutes) && diffMinutes < 1 ? false : true
+        let showSecond = /nozero/.test(options.seconds) && diffSeconds < 1 ? false : true
 
         if(/%t\(.*\)/.test(options.daysSuffix)) {
             parts = /%t\(.*\)/.exec(options.daysSuffix)
