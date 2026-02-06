@@ -69,6 +69,7 @@
 
     function getDate(val, from) {
         let res;
+        let gres;
         const sval = (typeof val === "string") ? val.trim() : val;
         
         // 1) Wenn User im UI bereits from/to gewählt hat, dann diese Werte nutzen
@@ -82,6 +83,7 @@
             if (rel) {
                 // KEIN chart.value.from/to verwenden oder setzen -> sonst wird’s "statisch" und oft 00:00
                 res = formatLocalDateTime(rel);
+                gres = formatLocalDate(rel);
             }
         }
 
@@ -89,6 +91,7 @@
         if (!res && sval instanceof Date) {
             // DatePicker ist i.d.R. 00:00:00 -> bewusst nur Datum zurückgeben
             res = sval;
+            gres = res;
             if (!chart.value.from && from) chart.value.from = res;
             if (!chart.value.to && !from)  chart.value.to = res;
             // return formatLocalDate(res);
@@ -102,6 +105,7 @@
             if (!chart.value.from && from) chart.value.from = d;
             if (!chart.value.to && !from)  chart.value.to = d;
             res = formatLocalDate(d);
+            gres = res;
         }
 
         // 5) Absolute Strings: wenn keine Uhrzeit drin ist -> 00:00:00
@@ -109,8 +113,8 @@
         if (/.*T.*/.test(s))
             res = new Date(s + "T00:00:00");
 
-        if (!chart.value.from && from) chart.value.from = res;
-        if (!chart.value.to && !from)  chart.value.to = res;
+        if (!chart.value.from && from) chart.value.from = gres;
+        if (!chart.value.to && !from)  chart.value.to = gres;
 
         return res;
     }
