@@ -98,7 +98,7 @@
         }
 
         // 4) Tages-Offsets (-1, 0, 1 ...) -> DBLog-Style
-        if (!res && typeof sval === "number" || (typeof sval === "string" && sval !== "" && !isNaN(sval))) {
+        if (!res && (typeof sval === "number" || (typeof sval === "string" && sval !== "" && !isNaN(sval)))) {
             const d = new Date();
             d.setDate(d.getDate() + (Number(sval) || 0));
             // Offset bedeutet Tag -> Datum ohne Uhrzeit
@@ -113,7 +113,7 @@
         if (/.*T.*/.test(s))
             res = new Date(s + "T00:00:00");
 
-        console.log("res-gres: " + res + "-" + gres);
+        //console.log("res-gres: " + res + "-" + gres);
 
         if (!chart.value.from && from) chart.value.from = gres;
         if (!chart.value.to && !from)  chart.value.to = gres;
