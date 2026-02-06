@@ -105,7 +105,7 @@
             if (!chart.value.from && from) chart.value.from = d;
             if (!chart.value.to && !from)  chart.value.to = d;
             res = formatLocalDate(d);
-            gres = d;
+            gres = formatLocalDate(d);
         }
 
         // 5) Absolute Strings: wenn keine Uhrzeit drin ist -> 00:00:00
