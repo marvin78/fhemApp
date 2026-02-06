@@ -98,7 +98,7 @@
         }
 
         // 4) Tages-Offsets (-1, 0, 1 ...) -> DBLog-Style
-        if (!res && (typeof sval === "number" || (typeof sval === "string" && sval !== "" && !isNaN(sval)))) {
+        if (!res && !isNaN(sval)) {
             const d = new Date();
             d.setDate(d.getDate() + (Number(sval) || 0));
             // Offset bedeutet Tag -> Datum ohne Uhrzeit
