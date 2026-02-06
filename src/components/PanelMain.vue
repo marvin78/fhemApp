@@ -6,6 +6,7 @@
     import PanelMainSlider from './PanelMainSlider.vue'
     import PanelMainImage from './PanelMainImage.vue'
     import PanelMainIframe from './PanelMainIframe.vue'
+    import PanelMainHtml from './PanelMainHtml.vue'
     import PanelMainMenu from './PanelMainMenu.vue'
     import PanelMainChart from './PanelMainChart.vue'
     import PanelMainColorpicker from './PanelMainColorpicker.vue'
@@ -38,6 +39,7 @@
         if(type === 'slider') return PanelMainSlider
         if(type === 'image') return PanelMainImage
         if(type === 'iframe') return PanelMainIframe
+        if(type === 'html') return PanelMainHtml
         if(type === 'menu') return PanelMainMenu
         if(type === 'chart') return PanelMainChart
         if(type === 'colorpicker') return PanelMainColorpicker

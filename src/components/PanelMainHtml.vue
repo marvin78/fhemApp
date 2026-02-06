@@ -27,5 +27,6 @@
     <html 
         :height="height"
         style="border:none; width:100%;">
+        {{ content.text }}     
     </html>
 </template>

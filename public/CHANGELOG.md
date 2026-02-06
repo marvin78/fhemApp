@@ -1,3 +1,6 @@
+# v4.9.2S (06.02.2026)
+## Core
+- try to add html as panel
 # v4.9.1S (06.02.2026)
 ## Core
 - try to add html as panel
