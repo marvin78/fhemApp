@@ -83,7 +83,7 @@
             if (rel) {
                 // KEIN chart.value.from/to verwenden oder setzen -> sonst wird’s "statisch" und oft 00:00
                 res = formatLocalDateTime(rel);
-                gres = rel;
+                gres = formatLocalDate(rel);
             }
         }
 
