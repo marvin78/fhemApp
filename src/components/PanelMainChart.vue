@@ -69,7 +69,6 @@
 
     function getDate(val, from) {
         let res;
-        const sval = (typeof val === "string") ? val.trim() : val;
         
         // 1) Wenn User im UI bereits from/to gewählt hat, dann diese Werte nutzen
         if (chart.value.from && from) res = chart.value.from;
@@ -77,42 +76,26 @@
 
 
         // 2) Relative Angaben IMMER direkt auflösen (Vorrang!)
-        if (!res && typeof sval === "string") {
-            const rel = parseRelativeToDate(sval); // deine Funktion (-6h, now, ...)
+        if (!res && typeof val === "string") {
+            const rel = parseRelativeToDate(val); // deine Funktion (-6h, now, ...)
             if (rel) {
                 // KEIN chart.value.from/to verwenden oder setzen -> sonst wird’s "statisch" und oft 00:00
-                res = formatLocalDateTime(rel);
+                res = rel;
             }
         }
 
-        // 3) Date-Objekt (DatePicker)
-        if (!res && sval instanceof Date) {
-            // DatePicker ist i.d.R. 00:00:00 -> bewusst nur Datum zurückgeben
-            res = sval;
-            if (!chart.value.from && from) chart.value.from = res;
-            if (!chart.value.to && !from)  chart.value.to = res;
-            // return formatLocalDate(res);
-        }
-
         // 4) Tages-Offsets (-1, 0, 1 ...) -> DBLog-Style
-        if (!res && !isNaN(sval)) {
-            const d = new Date();
-            d.setDate(d.getDate() + (Number(sval) || 0));
-            // Offset bedeutet Tag -> Datum ohne Uhrzeit
-            if (!chart.value.from && from) chart.value.from = formatLocalDate(d);
-            if (!chart.value.to && !from)  chart.value.to = formatLocalDate(d);
-            res = formatLocalDate(d);
-        }
+        if(!res && !isNaN(val)) res = (d => new Date(d.setDate(d.getDate() + (Number(val) || 0))))(new Date) 
 
         // 5) Absolute Strings: wenn keine Uhrzeit drin ist -> 00:00:00
-        const s = String(sval);
-        if (/.*T.*/.test(s))
-            res = new Date(s + "T00:00:00");
+        if(!res) res = new Date(/.*T.*/.test(val) ? val : val + 'T00:00:00')
 
         //console.log("res-gres: " + res + "-" + gres);
 
         if (!chart.value.from && from) chart.value.from = res;
         if (!chart.value.to && !from)  chart.value.to = res;
+
+        res = new Date(res.getTime() - (res.getTimezoneOffset() * 60 * 1000))
 
         return res;
     }
