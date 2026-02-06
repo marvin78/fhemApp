@@ -70,10 +70,12 @@
     function getDate(val, from) {
         let res;
         const sval = (typeof val === "string") ? val.trim() : val;
-
+        
+        if (chart.value.from) console.log(chart.value.from);
         // 1) Wenn User im UI bereits from/to gewählt hat, dann diese Werte nutzen
         if (chart.value.from && from) res = formatLocalDate(chart.value.from);
         if (chart.value.to && !from)  res = formatLocalDate(chart.value.to);
+
 
         // 2) Relative Angaben IMMER direkt auflösen (Vorrang!)
         if (!res && typeof sval === "string") {
