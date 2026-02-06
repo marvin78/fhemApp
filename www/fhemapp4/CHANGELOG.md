@@ -1,28 +1,31 @@
-# v4.8.19 (05.02.2026)
+# v4.8.20 (06.02.2026)
 ## Charts
 - another try to fix invalid date
-# v4.8.18 (05.02.2026)
+# v4.8.19 (06.02.2026)
 ## Charts
 - another try to fix invalid date
-# v4.8.17 (05.02.2026)
+# v4.8.18 (06.02.2026)
+## Charts
+- another try to fix invalid date
+# v4.8.17 (06.02.2026)
 ## Charts
 - another try to fix invalid date
 # v4.8.16 (05.02.2026)
 ## Charts
 - some logging
-# v4.8.15 (05.02.2026)
+# v4.8.15 (06.02.2026)
 ## Charts
 - try to fix invalid date.hours
-# v4.8.14 (05.02.2026)
+# v4.8.14 (06.02.2026)
 ## Charts
 - delete debug console log
-# v4.8.13 (05.02.2026)
+# v4.8.13 (06.02.2026)
 ## Charts
 - possible fix for invalid date
-# v4.8.12 (05.02.2026)
+# v4.8.12 (06.02.2026)
 ## Charts
 - log for debug
-# v4.8.11 (05.02.2026)
+# v4.8.11 (06.02.2026)
 ## Charts
 - better from/to handling
 # v4.8.10 (03.02.2026)
