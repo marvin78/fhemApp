@@ -1,3 +1,6 @@
+# v4.8.35 (06.02.2026)
+## Charts
+- add relative midnight
 # v4.8.34 (06.02.2026)
 ## Charts
 - some log

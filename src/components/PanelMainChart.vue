@@ -39,8 +39,14 @@
         return i18n.d(val, { dateStyle: mobile.value ? 'short' : 'long' })
     }
 
-    function parseRelativeToDate(v) {
+    function parseRelativeToDate(v,from) {
         if (v === "now") return new Date();
+        if (v === "midnight") {
+            const tom_midnight = new Date()
+            if (!from) tom_midnight.setDate(tom_midnight.getDate() + 1)
+            tom_midnight.setHours(0, 0, 0, 0)   
+            return tom_midnight
+        }
 
         const m = /^(-?\d+)(s|m|h|d|w)$/.exec(v);
         if (!m) return null;
@@ -77,7 +83,7 @@
 
         // 2) Relative Angaben IMMER direkt auflösen (Vorrang!)
         if (!res && typeof val === "string") {
-            const rel = parseRelativeToDate(val); // deine Funktion (-6h, now, ...)
+            const rel = parseRelativeToDate(val,from); // deine Funktion (-6h, now, ...)
             if (rel) {
                 // KEIN chart.value.from/to verwenden oder setzen -> sonst wird’s "statisch" und oft 00:00
                 res = rel;
