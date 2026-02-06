@@ -1,3 +1,6 @@
+# v4.8.12 (05.02.2026)
+## Charts
+- log for debug
 # v4.8.11 (05.02.2026)
 ## Charts
 - better from/to handling
