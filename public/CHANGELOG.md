@@ -1,3 +1,6 @@
+# v4.8.28 (06.02.2026)
+## Charts
+- another try to fix invalid date
 # v4.8.27 (06.02.2026)
 ## Charts
 - rollback a few steps

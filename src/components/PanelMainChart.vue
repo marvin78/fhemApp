@@ -99,8 +99,8 @@
             const d = new Date();
             d.setDate(d.getDate() + (Number(sval) || 0));
             // Offset bedeutet Tag -> Datum ohne Uhrzeit
-            if (!chart.value.from && from) chart.value.from = d;
-            if (!chart.value.to && !from)  chart.value.to = d;
+            if (!chart.value.from && from) chart.value.from = formatLocalDate(d);
+            if (!chart.value.to && !from)  chart.value.to = formatLocalDate(d);
             res = formatLocalDate(d);
         }
 
