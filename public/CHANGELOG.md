@@ -1,3 +1,6 @@
+# v4.8.14 (05.02.2026)
+## Charts
+- delete debug console log
 # v4.8.13 (05.02.2026)
 ## Charts
 - possible fix for invalid date

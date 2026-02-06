@@ -111,8 +111,6 @@
         if (!chart.value.from && from) chart.value.from = res;
         if (!chart.value.to && !from)  chart.value.to = res;
 
-        console.log(res);
-
         return res;
     }
 
