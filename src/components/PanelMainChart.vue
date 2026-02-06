@@ -125,13 +125,14 @@
         if(defs.length > 0) {
             for(const def of defs) {
                 if(/^get.*/.test(def.data)) {
-                    console.log(def.data)
                     xAxisType = 'time'
                     cmd = def.data.split(' ')
 
                     for(const device of props.devices) if(device.split(':')[0] === cmd[1]) cmd[1] = device.split(':')[1]
                     cmd[4] = getDate(cmd[4], true)
                     cmd[5] = getDate(cmd[5], false)
+
+                    console.log(def.data + " - " + cmd.join(' '))
 
                     logData = await fhem.request('text', cmd.join(' '))
                     
