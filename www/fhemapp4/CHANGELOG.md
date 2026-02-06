@@ -1,5 +1,8 @@
 # v4.8.29 (06.02.2026)
 ## Charts
+- fix for revert some of the AI suggested changes
+# v4.8.29 (06.02.2026)
+## Charts
 - revert some of the AI suggested changes
 # v4.8.28 (06.02.2026)
 ## Charts

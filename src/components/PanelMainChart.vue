@@ -97,7 +97,7 @@
 
         res = new Date(res.getTime() - (res.getTimezoneOffset() * 60 * 1000))
 
-        return res;
+        return res.toISOString();
     }
 
 
