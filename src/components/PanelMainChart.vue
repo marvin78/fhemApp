@@ -125,6 +125,7 @@
         if(defs.length > 0) {
             for(const def of defs) {
                 if(/^get.*/.test(def.data)) {
+                    console.log(def.data)
                     xAxisType = 'time'
                     cmd = def.data.split(' ')
 
