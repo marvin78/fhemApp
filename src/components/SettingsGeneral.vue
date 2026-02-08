@@ -75,8 +75,8 @@
                         v-model="fhem.app.config.header.warnSymbol"
                         density="compact" 
                         variant="outlined"
-                        label="Device"
-                        placeholder="fhem_dummy"
+                        label="Definition"
+                        placeholder="device-reading"
                         persistent-placeholder
                         hide-details
                         clearable

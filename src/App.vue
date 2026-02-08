@@ -92,6 +92,7 @@
         <div v-if="mobile && fhem.app.header.showTitle" class="text-h5">{{ mobileTitle }}</div>
 
         <template v-slot:append>
+          <v-btn v-if="fhem.app.header.warnSymbol && fhem.app.header.warnSymbol!=''" icon="mdi-alert"></v-btn>
           <v-btn v-if="fhem.app.settings.loglevel > 6" icon="mdi-information" @click="showInternals()"></v-btn>
           <OptionsMenu/>
         </template>

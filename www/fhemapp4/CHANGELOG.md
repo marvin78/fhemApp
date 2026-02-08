@@ -1,3 +1,6 @@
+# v4.9.10S (08.02.2026)
+## Core
+- warn symbol in title bar
 # v4.9.9S (08.02.2026)
 ## Core
 - warn symbol second try 
