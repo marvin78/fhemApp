@@ -1,3 +1,6 @@
+# v4.9.9S (08.02.2026)
+## Core
+- warn symbol second try 
 # v4.9.8S (08.02.2026)
 ## Core
 - rollback 
@@ -6,7 +9,7 @@
 - rollback 
 # v4.9.6S (08.02.2026)
 ## Core
-- begin: warnTitle
+- begin: warn symbol
 # v4.9.5S (08.02.2026)
 ## Core
 - ymidnight for whole yesterday

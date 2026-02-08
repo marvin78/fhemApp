@@ -34,6 +34,8 @@
                 "optionsMenuUpdateSubTitle": "Shows an option to run an update when it is available",
                 "optionsMenuLanguagesTitle": "Languages",
                 "optionsMenuLanguagesSubTitle": "Shows an option field for switching languages",
+                "warnTitle": "Warningsymbol",
+                "warnSubTitle": "Shows a warn-icon with Link to popout containing text from this device",
                 "fhemCommands": "Options menu FHEM commands",
                 "fhemCommandsName": "Name",
                 "fhemCommandsTitle": "Description",

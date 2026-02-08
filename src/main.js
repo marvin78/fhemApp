@@ -24,7 +24,7 @@ import {use} from 'echarts/core'
 import {SVGRenderer} from 'echarts/renderers'
 import {LineChart, BarChart } from 'echarts/charts'
 import {TitleComponent, TooltipComponent, LegendComponent, GridComponent, DataZoomComponent } from 'echarts/components'
-*/s
+*/
 
 const vuetify = createVuetify({
     locale: {
