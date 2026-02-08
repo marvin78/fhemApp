@@ -47,6 +47,13 @@
             tom_midnight.setHours(0, 0, 0, 0)   
             return tom_midnight
         }
+        if (v === "ymidnight") {
+            const tom_midnight = new Date()
+            tom_midnight.setDate(tom_midnight.getDate() - 1);
+            if (!from) tom_midnight.setDate(tom_midnight.getDate() + 1)
+            tom_midnight.setHours(0, 0, 0, 0)   
+            return tom_midnight
+        }
 
         const m = /^(-?\d+)(s|m|h|d|w)$/.exec(v);
         if (!m) return null;

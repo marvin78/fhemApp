@@ -34,6 +34,8 @@
                 "optionsMenuUpdateSubTitle": "Zeigt eine Option zum Ausführen eines Updates, wenn es bereitsteht",
                 "optionsMenuLanguagesTitle": "Sprachen",
                 "optionsMenuLanguagesSubTitle": "Zeigt eine Optionsfeld zum Umschalten der Sprachen",
+                "warnTitle": "Warnsymbol",
+                "warnSubtitle": "Zeigt ein Warnsymbol mit Link für ein Popout mit dem Text aus dem hier genannten Device", 
                 "fhemCommands": "Optionsmenü FHEM Befehle",
                 "fhemCommandsName": "Name",
                 "fhemCommandsTitle": "Beschriftung",

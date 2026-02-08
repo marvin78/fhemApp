@@ -1,3 +1,6 @@
+# v4.9.5S (08.02.2026)
+## Core
+- ymidnight for whole yesterday
 # v4.9.4S (06.02.2026)
 ## Core
 - try to get html panel to work

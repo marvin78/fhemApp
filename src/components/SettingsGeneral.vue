@@ -214,6 +214,13 @@
                         </v-list-item-action>
                     </template>
                 </v-list-item>
+                <v-list-item :lines="mobile ? 'two' : 'one'" :title="$t(preLang + 'warnTitle')" :subtitle="$t(preLang + 'warnSubTitle')">
+                    <template v-slot:append>
+                        <v-list-item-action start>
+                            <v-switch v-model="fhem.app.config.header.showWarn" color="primary" hide-details density="compact"></v-switch>
+                        </v-list-item-action>
+                    </template>
+                </v-list-item>
             </v-col>
         </v-row>
 
