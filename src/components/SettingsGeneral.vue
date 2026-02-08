@@ -70,20 +70,6 @@
                         class="my-4">
                     </v-text-field>
                 </v-list-item>
-                <v-list-item :lines="mobile ? 'two' : 'one'" :title="$t(preLang + 'warnTitle')" :subtitle="$t(preLang + 'warnSubTitle')">
-                    <v-text-field
-                        v-model="fhem.app.config.header.warnTitle"
-                        density="compact" 
-                        variant="outlined"
-                        label="Device"
-                        placeholder="fhem_dummy"
-                        persistent-placeholder
-                        hide-details
-                        clearable
-                        max-width="650px"
-                        class="my-4">
-                    </v-text-field>
-                </v-list-item>
             </v-col>
             <v-col :cols="mobile ? '12' : '6'">
                 <v-list-item :disabled="fhem.app.config.header.imageUrl ? false : true" :lines="mobile ? 'two' : 'one'" :title="$t(preLang + 'headLineImageGradientTitle')" :subtitle="$t(preLang + 'headLineImageGradientSubTitle')">

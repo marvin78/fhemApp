@@ -1,3 +1,6 @@
+# v4.9.7S (08.02.2026)
+## Core
+- rollback 
 # v4.9.6S (08.02.2026)
 ## Core
 - begin: warnTitle
