@@ -35,7 +35,7 @@
                 "optionsMenuLanguagesTitle": "Languages",
                 "optionsMenuLanguagesSubTitle": "Shows an option field for switching languages",
                 "warnTitle": "Warningsymbol",
-                "warnSubtitle": "Shows a warn-icon with Link to popout containing text from this device",
+                "warnSubTitle": "Shows a warn-icon with Link to popout containing text from this device",
                 "fhemCommands": "Options menu FHEM commands",
                 "fhemCommandsName": "Name",
                 "fhemCommandsTitle": "Description",
