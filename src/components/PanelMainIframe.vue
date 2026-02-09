@@ -11,7 +11,13 @@
 
     const fhem = useFhemStore()
 
-    const height = ref(/=maximized$/.test(fhem.app.currentView) ? (window.innerHeight - 170) : props.height)
+    //const height = ref(/=maximized$/.test(fhem.app.currentView) ? (window.innerHeight - 170) : props.height)
+
+    const contentSize = computed(() => {
+        return {
+            height: /=maximized$/.test(fhem.app.currentView) ? (window.innerHeight - 170) : props.height
+        }
+    })
 
     const content = computed(() => {
         let src = fhem.handleDefs(props.el.iframe, ['source', 'lazyload'],['', true]),
@@ -28,7 +34,7 @@
     <iframe 
         :src="content.source"
         :loading="content.lazy"
-        :height="height"
+        :height="contentSize.height"
         style="border:none; width:100%;">
     </iframe>
 </template>

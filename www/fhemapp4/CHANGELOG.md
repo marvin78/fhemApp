@@ -1,3 +1,6 @@
+# v4.9.11S (09.02.2026)
+## Core
+- try to fix iframe size
 # v4.9.10S (08.02.2026)
 ## Core
 - warn symbol in title bar
